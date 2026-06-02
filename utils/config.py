@@ -9,7 +9,7 @@ what the current working directory is when it runs.
 """
 
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List, Tuple
 
 
 # ------------------------------------------------------------------------------
@@ -59,7 +59,6 @@ SVG_LAYERS_DIR      = EXPORT_DIR / "svg_layers"
 
 FINAL_DIR           = EXPORT_DIR / "_final"
 
-
 # ------------------------------------------------------------------------------
 #  Exporter.exe build + invocation
 # ------------------------------------------------------------------------------
@@ -68,7 +67,7 @@ EXPORTER_EXE        = REPO_ROOT / "Exporter.exe"
 
 EXPORTER_PROJECT_DIR = REPO_ROOT / "Exporter"
 EXPORTER_PROJECT     = EXPORTER_PROJECT_DIR / "Exporter.csproj"
-EXPORTER_TFM         = "net10.0"
+EXPORTER_TFM         = "net9.0"
 EXPORTER_RID         = "win-x64"
 EXPORTER_PUBLISH_DIR = (
     EXPORTER_PROJECT_DIR / "bin" / "Release" / EXPORTER_TFM / EXPORTER_RID / "publish"
@@ -86,9 +85,113 @@ NUM_WORKERS_SPILLS = 3
 
 
 FOXHOLE_PAK = Path(
-    r"C:\Program Files (x86)\Steam\steamapps\common"
+    r"H:\SteamLibrary\steamapps\common"
     r"\Foxhole\War\Content\Paks\War-WindowsNoEditor.pak"
 )
+
+# ------------------------------------------------------------------------------
+#  Knight of Science fork configs, primarily for 5_finalize_exports.py
+# ------------------------------------------------------------------------------
+
+# ship drafts in meters
+SHALLOW_DEPTH = 1.0
+VIC_DEPTH = 2.0
+#BMS_BLUEFIN_DRAFT = 3.81
+#BMS_LONGHOOK_DRAFT = 4.68
+C_TRIDENT_DRAFT = 4.8
+#BMS_BOWHEAD_DRAFT = 5.23
+#C_CONQUEROR_DRAFT = 5.52
+#W_CALLAHAN_MERCY_DRAFT = 6.03
+W_NAKKI_DRAFT = 6.27
+W_BLACKSTEELE_DRAFT = 6.85
+C_TITAN_DRAFT = 7.94
+#C_POSEIDON_DRAFT = 8.32
+LARGE_SHIP_BEACH_DEPTH = C_TITAN_DRAFT
+INTEL_DEPTH = 14.19 #6.75 + 7.44
+MEDIUM_WATER_DEPTH = 27.44 #20.0 + 7.44
+
+# DEEP_WATER_DEPTH is already used to cull irrelevant geometry that is too deep during 3_blend_spills.py
+DEEP_WATER_DEPTH = 32.44 #25.0 + 7.44
+
+# detailed depth colors variant
+WATER_DEPTH_COLORS: Dict[str, str] = {
+    "SHALLOW_DEPTH":              "#C0E8C6",
+    "VIC_DEPTH":                  "#9BC9AE",
+    "C_TRIDENT_DRAFT":            "#6681CC",
+    "W_NAKKI_DRAFT":              "#7E93CC",
+    "W_BLACKSTEELE_DRAFT":        "#96A5CC",
+    "C_TITAN_DRAFT":              "#AFB7CC",
+    "INTEL_DEPTH":                "#D3D3CB",
+    "MEDIUM_WATER_DEPTH":         "#8F95AA",
+    "SOMEWHAT_DEEP_WATER_DEPTH":  "#6B7993",
+    "EXTREMELY_DEEP":             "#596B87",
+}
+
+# simple depth colors variant
+WATER_DEPTH_COLORS_SIMPLE: Dict[str, str] = {
+    "SHALLOW_DEPTH":              "#C5CEE5",
+    "VIC_DEPTH":                  "#A9BAE5",
+    "C_TITAN_DRAFT":              "#94A0C1",
+    "INTEL_DEPTH":                "#9390B2",
+    "MEDIUM_WATER_DEPTH":         "#8F95AA",
+    "SOMEWHAT_DEEP_WATER_DEPTH":  "#6B7993",
+    "EXTREMELY_DEEP":             "#596B87",
+}
+
+# blur depth bands together
+WATER_DEPTH_INTERPOLATE_COLORS = False
+WATER_DEPTH_COVERAGE_BLUR_KSIZE = 3 #3
+WATER_DEPTH_COVERAGE_BLUR_SIGMA = 0.0
+
+# apply a continous shading based on depth
+DEPTH_COLOR_SCALING_ENABLED = False
+DEPTH_COLOR_BLEND_TARGET_COLOR = "#102844"
+DEPTH_COLOR_BLEND_MAX_OPACITY = 0.5
+
+RECOLOR_WATER_FLAG = True
+
+WATER_TREAT_DEEP_WATER_AS_WATER = True
+
+# debug option to visualize magnitude of gradient of terrain
+# gradient calculated by from 5 points in a plus sign.
+WATER_COLOR_BY_GRADIENT = False
+WATER_GRADIENT_SWEEP_PX = 3
+WATER_GRADIENT_BLACK_SLOPE = 1.0
+
+# debug downsample layers after import, reducing processing time.
+TURBO_MODE_DOWNSAMPLE = False
+
+# contour modifiers
+BASE_LAYER_DEBUG_CONTOURS = True
+BASE_LAYER_CONTOUR_ALPHA_MULT = 0.3
+CONTOUR_STEP_M = 2.5
+CONTOUR_OFFSET_M = -0.18
+UNDERWATER_CONTOUR_NORMAL_EXCLUSION_DISTANCE = 0.5
+CONTOUR_INCLUDE_UNDERWATER_ROCKS = True
+
+BASE_LAYER_HIDE_UNDERWATER_ROCKS = True
+BASE_LAYER_DISABLE_TERRAIN_FILL_IN_WATER = True
+BASE_LAYER_TERRAIN_RECOLOR_WATER_AS_WATER = True
+
+BASE_LAYER_APPLY_AO = True
+BASE_LAYER_UNDERWATER_AO_ALPHA_MULT = True
+BASE_LAYER_UNDERWATER_AO_ALPHA_MULTIPLIER = 0.1
+BASE_LAYER_UNDERWATER_AO_PARTIAL_COVERAGE = True
+
+
+# Per-terrain-weight layer switches consumed by 5_finalize_exports.py.
+# Disabled layers are skipped during shade/material stitching.
+LAYER_ENABLED: Dict[str, bool] = {
+    "TownStone": True,
+}
+
+DISABLE_NON_WATER_ROCK_LAYERS = False
+
+WRITE_ADDITIONAL_ASSEMBLY_LAYERS = True
+WRITE_RDZ_DARK_ASSEMBLY_LAYER = True
+
+# Saves export/_final/assembly/base_layer_simple.png containingn simple depth colors
+BASE_LAYER_SIMPLE_ENABLED = True
 
 
 # ------------------------------------------------------------------------------
@@ -99,7 +202,6 @@ TILE_SIZE = 2048               # per-region bake resolution (px)
 TILE_HALF = TILE_SIZE // 2     # half-extent used when stitching
 
 PIXEL_SIZE_M = 1890.0 / 1776.0 # Blender metres per pixel
-DEEP_WATER_DEPTH = 25.0
 
 HM_SPLIT_M = 20.0
 FLY_ALERT_MIN_M = 95.0
@@ -187,6 +289,7 @@ SPLINE_LAYER_TERRAIN_DROP = 4
 # Split-layer membership no longer affects ao/hm/id inclusion; that is
 # controlled independently by TERRAIN_WHITELIST above. A category can
 # therefore appear in both the whitelist and a split layer if desired.
+
 SPLIT_LAYERS: Dict[str, Dict[str, str]] = {
     "houses":    {"houses":          "#232323"},
     "ghouses":   {"ghouses":         "#A6AEBE"},
@@ -198,6 +301,7 @@ SPLIT_LAYERS: Dict[str, Dict[str, str]] = {
                   "sidewalks":       "#78787F",
                   "vehicles":        "#7E78A7"}
 }
+
 # ignored foliage_collision, foliage_invis, foliage_no_collision
 # roofs_ghouses, roofs_misc, ignore
 
@@ -272,6 +376,7 @@ CATEGORY_COLORS: Dict[str, str] = {
 # 3_blend_spills.py places these into the focus region's .blend under
 # collection 'splines/<category>/'. 4_render_spills.py uses the
 # t1_road / t2_road / t3_road / beach categories specially (see below).
+
 SPLINE_CATEGORIES: Dict[str, list] = {
     "t1_road": [
         "Meshes__Environment__Roads__RoadT1Dirt01",
@@ -295,10 +400,12 @@ SPLINE_CATEGORIES: Dict[str, list] = {
 # Per-spline-category colors used by the 'roads' / 'beaches' renders in
 # 4_render_spills.py. Entries without a color here fall back to the
 # generic 'splines' color.
+
+#rustard road colors
 SPLINE_COLORS: Dict[str, str] = {
-    "t1_road":                 "#BEC1C0",
-    "t2_road":                 "#B89B83",
-    "t3_road":                 "#B48780",
+    "t1_road":                 "#ECECEC",
+    "t2_road":                 "#D5AC6C",
+    "t3_road":                 "#D5816F",
     "beach":                   "#B6A177",
 }
 
@@ -350,6 +457,8 @@ ID_RECOLOR: Dict[str, str] = {
     "landscape_meshes_brown":  "#90746B",
     "landscape_meshes_gray":   "#5A5A5A",
 }
+
+
 
 # ------------------------------------------------------------------------------
 #  SVG layers (4_render_spills.py)
