@@ -194,6 +194,58 @@ WRITE_RDZ_DARK_ASSEMBLY_LAYER = True
 BASE_LAYER_SIMPLE_ENABLED = True
 
 
+WATER_DEPTH_LEGEND: List[Tuple[str, str]] = [
+    ("SHALLOW_DEPTH",             " <  1.0m | Shallows, walkable"),
+    ("VIC_DEPTH",                 " <  2.0m | Drivable depth, swimming required"),
+    ("C_TRIDENT_DRAFT",           "    3.8m | BMS BLUEFIN draft (not shown)"),
+    ("C_TRIDENT_DRAFT",           "    4.7m | BMS LONGHOOK draft (not shown)"),
+    ("C_TRIDENT_DRAFT",           " <  4.8m | COLLIE TRIDENT 0 ballast draft"),
+    ("W_NAKKI_DRAFT",             "    5.2m | BMS BOWHEAD draft (not shown)"),
+    ("W_NAKKI_DRAFT",             "    5.5m | COLLIE CONQUEROR draft (not shown)"),
+    ("W_NAKKI_DRAFT",             "    6.0m | WARD CALLAHAN + MERCY draft (not shown)"),
+    ("W_NAKKI_DRAFT",             " <  6.3m | WARD NAKKI 0 ballast draft"),
+    ("W_BLACKSTEELE_DRAFT",       " <  6.9m | WARD FRIGATE draft"),
+    ("C_TITAN_DRAFT",             " <  7.9m | COLLIE TITAN draft, all large ship beach warning"),
+    ("INTEL_DEPTH",               "    8.3m | COLLIE POSEIDON draft (not shown, see details)"),
+    ("INTEL_DEPTH",               " < 14.2m | TRIDENT + NAKKI incapable of hiding from intelligence"),
+    ("MEDIUM_WATER_DEPTH",        " < 27.4m | WARDEN NAKKI incapable of crush depth"),
+    ("SOMEWHAT_DEEP_WATER_DEPTH", " < 32.4m | COLLIE TRIDENT incapable of crush depth"),
+    ("EXTREMELY_DEEP",            " > 32.4m | TRIDENT + NAKKI capable of crush depth"),
+]
+
+WATER_DEPTH_LEGEND_SIMPLE: List[Tuple[str, str]] = [
+    ("SHALLOW_DEPTH",             " <  1.0m | Shallows, walkable"),
+    ("VIC_DEPTH",                 " <  2.0m | Drivable depth, swimming required"),
+    ("LARGE_SHIP_BEACH_DEPTH",    "    3.8m | BMS BLUEFIN draft (not shown)"),
+    ("LARGE_SHIP_BEACH_DEPTH",    "    4.7m | BMS LONGHOOK draft (not shown)"),
+    ("LARGE_SHIP_BEACH_DEPTH",    "    4.8m | COLLIE TRIDENT 0 ballast draft (not shown)"),
+    ("LARGE_SHIP_BEACH_DEPTH",    "    5.2m | BMS BOWHEAD draft (not shown)"),
+    ("LARGE_SHIP_BEACH_DEPTH",    "    5.5m | COLLIE CONQUEROR draft (not shown)"),
+    ("LARGE_SHIP_BEACH_DEPTH",    "    6.0m | WARD CALLAHAN + MERCY draft (not shown)"),
+    ("LARGE_SHIP_BEACH_DEPTH",    "    6.3m | WARD NAKKI 0 ballast draft (not shown)"),
+    ("LARGE_SHIP_BEACH_DEPTH",    "    6.9m | WARD FRIGATE draft (not shown)"),
+    ("LARGE_SHIP_BEACH_DEPTH",    " <  7.9m | COLLIE TITAN draft, all large ship beach warning"),
+    ("INTEL_DEPTH",               "    8.3m | COLLIE POSEIDON draft (not shown, see details)"),
+    ("INTEL_DEPTH",               " < 14.2m | TRIDENT + NAKKI incapable of hiding from intelligence"),
+    ("MEDIUM_WATER_DEPTH",        " < 27.4m | WARDEN NAKKI incapable of crush depth"),
+    ("SOMEWHAT_DEEP_WATER_DEPTH", " < 32.4m | COLLIE TRIDENT incapable of crush depth"),
+    ("EXTREMELY_DEEP",            " > 32.4m | TRIDENT + NAKKI capable of crush depth"),
+]
+
+LEGEND_BORDER_COLOR = "#1D2433"
+LEGEND_FILL_COLOR = "#F4F1E8"
+LEGEND_TEXT_COLOR = LEGEND_BORDER_COLOR
+LEGEND_TITLE_STRING = "DEPTH COLOR LEGEND (DETAILED VARIANT)"
+LEGEND_SIMPLE_TITLE_STRING = "DEPTH COLOR LEGEND (SIMPLE VARIANT)"
+LEGEND_DISCLAIMER_STRING = (
+    "NOTE: Sub dive officer readings will be shallower than above depths."
+)
+LEGEND_DEPTH_TEXT_FONT_SIZE = 26
+LEGEND_TITLE_FONT_SIZE = 34
+LEGEND_SQUARES_SIZE = 24
+LEGEND_LINE_SPACING = 10
+
+
 # ------------------------------------------------------------------------------
 #  Tile geometry
 # ------------------------------------------------------------------------------
