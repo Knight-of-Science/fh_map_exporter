@@ -36,7 +36,7 @@ Completed:
 
  Planned:
  - [ ] Improve phrasing of crush depths, "less than", and "deeper than" in the legend.
- - [ ] Modify the contour generation to more closely resemble [Rustard's Improved Map Mod](https://rustard.itch.io/improved-map-mod)
+ - [ ] Modify the contour generation to more closely resemble [Rustard's Improved Map Mod](https://rustard.itch.io/improved-map-mod).
 
  Planned Lower Priority:
  - [ ] Verify submerged contours near non-primary bodies of water (lakes) are correctly spaced.
@@ -111,17 +111,19 @@ It becomes clear that for intel depth and crush depths the dive officer reading 
 
 ### Zero ballast dive officer reading
 
-For a Trident with 0 water in ballast tanks, DO reports -2.64, meaning 2.64m above the water's surface.
+For a Trident with 0 water in ballast tanks, DO reports -2.64m, meaning 2.64m above the water's surface.
 
-For a Nakki with 0 water in ballast tanks DO reports -1.08, meaning 1.08m above the water's surface.
+For a Nakki with 0 water in ballast tanks DO reports -1.08m, meaning 1.08m above the water's surface.
 
 ### Submarine model heights
 
 To determine the "height" of a Trident we placed one trident on the floor of a river and positioned another immediately on top of it. Then we measured the difference in dive officer readings.
 
 Trident at bottom DO: 12.3m
+
 Trident on top of bottom Trident DO: 6.4m
-12.3 - 6.4 = 5.9m tall Trident
+
+`12.3 - 6.4 = 5.9m tall Trident`
 
 We found the height of the Nakki through a similar method.
 
@@ -130,8 +132,10 @@ We positioned another Nakki directly below the surface anchored Nakki.
 We measured the difference in DO readings.
 
 Nakki at surface DO: -1.08m (1.08m above water)
+
 Nakki below surface Nakki DO: 6.64m
-6.64 - (-1.08) = 7.72m tall Nakki
+
+`6.64 - (-1.08) = 7.72m tall Nakki`
 
 ### Submarine distance from DO sensor to hull bottom and consequences
 
@@ -151,11 +155,11 @@ This returned 19.0m and confirmed that the area around the checked location was 
 
 Consider the following formula:
 
-Known world depth at bottom = measured_DO_depth_at_bottom + offset_from_DO_to_hull_bottom
+`Known world depth at bottom = measured_DO_depth_at_bottom + offset_from_DO_to_hull_bottom`
 
 Or equivalently:
 
-Known world depth at bottom - measured_DO_depth_at_bottom = offset_from_DO_to_hull_bottom
+`Known world depth at bottom - measured_DO_depth_at_bottom = offset_from_DO_to_hull_bottom`
 
 
 Then I had **Bullsaw** drive me there in a Trident and submerge as deep as we could. We bottomed out at 11.56m.
@@ -167,10 +171,12 @@ Then I had **Bullsaw** drive me there in a Trident and submerge as deep as we co
 This results in a difference of 0.09m between the two subs DO reading when their hull bottoms are at the same depth.
 
 Consider Trident intel depth:
-6.75 (DO reading) + 7.44 (DO_to_hull_bottom) = hull bottom is 14.19m deep
+
+`6.75 (DO reading) + 7.44 (DO_to_hull_bottom) = hull bottom is 14.19m deep`
 
 Consider Nakki intel depth:
-6.75 (DO reading) + 7.35 (DO_to_hull_bottom) = hull bottom is 14.1m deep
+
+`6.75 (DO reading) + 7.35 (DO_to_hull_bottom) = hull bottom is 14.1m deep`
 
 This implies that the Nakki achieves intel depth 0.09m shallower than the Trident.
 
@@ -184,50 +190,64 @@ This difference is small enough to ignore so I chose to calculate intel depth as
 
 Consider that the draft of the submarine is the distance from the surface of the water to the bottom of the submarine hull when all ballast tanks are empty.
 
-We know the DO reading when the sub has 0 ballast.
-We know the offset from DO to hull bottom
+We know the DO reading when the sub has 0 ballast, and also the offset from DO to hull bottom.
 
-Submarine draft = 0 ballast DO reading + DO_to_hull_bottom_offset
+`Submarine draft = 0 ballast DO reading + DO_to_hull_bottom_offset`
 
-Trident draft = -2.64 + 7.44 = 4.8m
-Nakki draft = -1.08 + 7.35 = 6.27m
+`Trident draft = -2.64 + 7.44 = 4.8m`
+`Nakki draft = -1.08 + 7.35 = 6.27m`
 
 The Trident can operate in much shallower waters than the Nakki
 
-## Draft calculations for non submarine large ships
+## Draft calculations for non-submarine large ships
 
 To find the draft of other large ships we position a Trident or Nakki directly under the large ship and attempt to rise as high as we can. Then measure the depth at the dive officer seat.
 
 Before we can do that, however, it's necessary to know for both submarines the DO_to_hull_top_offset.
 
-Consider that submarine_height = DO_to_hull_top_offset + DO_to_hull_bottom_offset
+Consider:
 
-This is true regardless of where the DO sensor actually is.
+`submarine_height = DO_to_hull_top_offset + DO_to_hull_bottom_offset`
 
-DO_to_hull_top_offset = submarine_height - DO_to_hull_bottom_offset
+The following is true regardless of where the DO sensor actually is.
 
-Trident DO_to_hull_top_offset = 5.9 - 7.44 = -1.54m, meaning the world depth of the trident's hull top is 1.54m shallower than the DO reading.
-Nakki DO_to_hull_top_offset = 7.72 - 7.35 = 0.37m, meaning the world depth of the Nakki's hull top is 0.37m deeper than the DO reading.
+`DO_to_hull_top_offset = submarine_height - DO_to_hull_bottom_offset`
 
-Yes, the Nakki's DO sensor is actually above where the top of the hull is.
+Plugging in known values:
 
-Large_ship_draft = DO reading (with X submarine pressing upward against large ship's hull bottom) + DO_to_hull_top_offset (for X submarine)
+`Trident DO_to_hull_top_offset = 5.9 - 7.44 = -1.54m`
+
+This means the world depth of the trident's hull top is 1.54m shallower than the DO reading.
+
+`Nakki DO_to_hull_top_offset = 7.72 - 7.35 = 0.37m`
+
+This means the world depth of the Nakki's hull top is 0.37m deeper than the DO reading.
+
+**Yes, the Nakki's DO sensor is actually above where the top of the hull is.**
+
+For a given submarine pressing upward against an anchored large ship's hull bottom:
+`Large_ship_draft = DO reading + DO_to_hull_top_offset`
 
 To test my method I calculated the draft of the BMS Longhook with both submarines.
 
-Longhook with Trident draft: 3.1 DO - (-1.54 offset) = 4.64m
-Longhook with Nakki draft: 5.08 DO - 0.37 offset = 4.71m
+Longhook with Trident draft:
+
+`3.1 DO - (-1.54 offset) = 4.64m`
+
+Longhook with Nakki draft:
+
+`5.08 DO - 0.37 offset = 4.71m`
 
 I used the average of 4.68m for the draft of the Longhook.
 
-This produces an error of 0.07m which is within the margin of error for the procedure.
+This produces an error of 0.07m which is within my error expectations.
 
 ## All raw draft calculation data
 We used the following formulas to calculate draft for this table:
 
-DO_to_hull_top_offset = submarine_height - DO_to_hull_bottom_offset
+`DO_to_hull_top_offset = submarine_height - DO_to_hull_bottom_offset`
 
-Large_ship_draft = DO reading (with X submarine pressing upward against large ship's hull bottom) + DO_to_hull_top_offset (for X submarine)
+`Large_ship_draft = DO reading + DO_to_hull_top_offset`
 
 | Draft being measured for | Sub used for measurement | Sub DO_to_hull_top_offset | Sub DO reading | Calculated draft |
 | -------- | -------- | -------- | -------- | -------- |
@@ -247,7 +267,7 @@ Large_ship_draft = DO reading (with X submarine pressing upward against large sh
 
 - Submarine pitch is visible to the dive officer and during the testing I didn't always get the sub to be perfectly level while under the tested large ship.
 
-Together I estimate my large ship draft measurements are within 0.1m of truth.
+**Together I estimate my large ship draft measurements are within 0.1m of truth.**
 
 This is supported by my BMS Longhook measurements being within 0.07m of each other.
 
