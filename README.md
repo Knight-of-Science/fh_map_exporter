@@ -108,8 +108,6 @@ There are several depths reported by dive officers that are relevant for both su
 | 25.0m | Trident crush depth. Colonial Trident Submarine capable of diving below crush depth in deeper waters. |
 | 30.0m | Max depth. Neither sub can reach depths such that dive officer reads lower than 30.0m |
 
-It becomes clear that for intel depth and crush depths the dive officer reading is what matters.
-
 ### Zero ballast dive officer reading
 
 For a Trident with 0 water in ballast tanks, DO reports -2.64m, meaning 2.64m above the water's surface.
@@ -146,7 +144,7 @@ To do this I used `WATER_COLOR_BY_GRADIENT = True` to color the map by magnitude
 
 I opened the output `export/_final/assembly/base_layer.png` in Paint.NET and looked for a large flat submerged area free of non-terrain geometry.
 
-In between the bridges in OriginHex I found such a location and measured the depth.
+In between the bridges in OriginHex I found such a location and measured the depth with a helper script I wrote.
 
 `python measure_depth.py 5738 8536 --region OriginHex --dump-grid`
 
@@ -163,11 +161,11 @@ Or equivalently:
 `Known world depth at bottom - measured_DO_depth_at_bottom = offset_from_DO_to_hull_bottom`
 
 
-I hopped into a Trident with **Bullsaw** a=abd we navigated to this location in OriginHex and dived as deep as we could go. We bottomed out at 11.56m according to the dive officer seat.
+I hopped into a Trident with **Bullsaw** and we navigated to this location in OriginHex and dived as deep as we could go. We bottomed out at 11.56m according to the dive officer seat.
 
 `19 - 11.56m = 7.44m from Trident DO to hull bottom`
 
-Then I went back with **JafShrimp** a Nakki and we bottomed out at 11.65m according to DO.
+Then I went back with **JafShrimp** in a Nakki and we bottomed out at 11.65m according to DO.
 
 `19 - 11.6m = 7.35m from Nakki DO to hull bottom.`
 
