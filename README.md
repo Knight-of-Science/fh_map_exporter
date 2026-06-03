@@ -5,9 +5,9 @@ Knight of Science detailed depth coloring with custom AI ranges, in-game view. F
 # Knight of Science Fork of [Tsekho/fh_map_exporter](https://github.com/Tsekho/fh_map_exporter/tree/main)
 
 ### This project is part of a wider group of Foxhole-related projects by Knight of Science.
-- **fh_kos_mods_builder** - (Not yet uploaded) Cooks output from the projects below in **Unreal Engine 4.24** to create finished `.pak` mod files for variants of [ImprovedMapStyle](https://knight-of-science.itch.io/improved-zoom) and [AmusingRenames](https://knight-of-science.itch.io/amusing-renames-mod) mods. Project is intended as a reference for others to make mod development easier for those new to the Foxhole texture, style, and localization modding scene.
-    - **fh_map_mod_assembler** - (Not yet uploaded) Combines and modifies layers from [Knight-of-Science/fh_map_exporter](https://github.com/Knight-of-Science/fh_map_exporter) to produce final map textures for multiple map mod variants.
-        - **[fh_map_exporter](https://github.com/Knight-of-Science/fh_map_exporter)** - **This project**. Fork of [Tsekho/fh_map_exporter](https://github.com/Tsekho/fh_map_exporter/tree/main) that generates map layers from level geometry enhanced by custom depth band coloring.
+- **fh_kos_mods_builder** - (Not yet uploaded) Cooks output from the projects below in **Unreal Engine 4.24** to create finished `.pak` mod files for my mods. Project is intended as a reference for others to make mod development easier for those new to the Foxhole texture, style, and localization modding scene.
+    - **fh_map_mod_assembler** - (Not yet uploaded) Combines and modifies layers from [Knight-of-Science/fh_map_exporter](https://github.com/Knight-of-Science/fh_map_exporter) to produce final map textures for multiple variants for my [map mod](https://knight-of-science.itch.io/improved-map-mod-kos-edit).
+        - **[fh_map_exporter](https://github.com/Knight-of-Science/fh_map_exporter)** - **This project.** Fork of [Tsekho/fh_map_exporter](https://github.com/Tsekho/fh_map_exporter/tree/main) that generates map layers from level geometry enhanced by custom depth band coloring.
 
     - **fh_mapstyle_and_renames_mod_assembler** - (Not yet uploaded) Modifies `.uasset` (Style) and `.locres` (localization) files to produce raw variants of [ImprovedMapStyle](https://knight-of-science.itch.io/improved-zoom) and [AmusingRenames](https://knight-of-science.itch.io/amusing-renames-mod) mods.
 
@@ -35,6 +35,7 @@ Completed:
  - [x] Generate `legend.png` and `legend_simple.png` for use by separate project to assemble final mod `.pak`.
 
  Planned:
+ - [ ] Add 1px border around rocks pixels that are adjacent to water.
  - [ ] Improve phrasing of crush depths, "less than", and "deeper than" in the legend.
  - [ ] Modify the contour generation to more closely resemble [Rustard's Improved Map Mod](https://rustard.itch.io/improved-map-mod).
 
@@ -162,11 +163,13 @@ Or equivalently:
 `Known world depth at bottom - measured_DO_depth_at_bottom = offset_from_DO_to_hull_bottom`
 
 
-Then I had **Bullsaw** drive me there in a Trident and submerge as deep as we could. We bottomed out at 11.56m.
-19 - 11.56m = 7.44m from Trident DO to hull bottom
+I hopped into a Trident with **Bullsaw** a=abd we navigated to this location in OriginHex and dived as deep as we could go. We bottomed out at 11.56m according to the dive officer seat.
 
-**JafShrimp** drove me there in a Nakki and we bottomed out at 11.65m.
-19 - 11.6m = 7.35m from Nakki DO to hull bottom.
+`19 - 11.56m = 7.44m from Trident DO to hull bottom`
+
+Then I went back with **JafShrimp** a Nakki and we bottomed out at 11.65m according to DO.
+
+`19 - 11.6m = 7.35m from Nakki DO to hull bottom.`
 
 This results in a difference of 0.09m between the two subs DO reading when their hull bottoms are at the same depth.
 
