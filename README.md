@@ -184,82 +184,88 @@ It's also the case that the Nakki crushes 0.09m shallower than the Trident, and 
 
 This difference is small enough to ignore so I chose to calculate intel depth as 14.19m and round it to 14.2m for display purposes.
 
-
-
 ## Submarine draft calculation
 
-Consider that the draft of the submarine is the distance from the surface of the water to the bottom of the submarine hull when all ballast tanks are empty.
+In this section I use depth coordinates, not Unreal world Z coordinates. Positive depth means deeper below the water surface. If these values are converted back to world Z, the signs flip because moving deeper means moving to a lower Z coordinate.
 
-We know the DO reading when the sub has 0 ballast, and also the offset from DO to hull bottom.
+The draft of a submarine is the distance from the surface of the water to the bottom of the submarine hull when all ballast tanks are empty.
 
-`Submarine draft = 0 ballast DO reading + DO_to_hull_bottom_offset`
+For clarity, every offset below is a signed depth delta from the dive officer sensor. A positive depth delta means the target point is deeper than the DO reading. A negative depth delta means the target point is shallower than the DO reading.
+
+We know the DO reading when the sub has 0 ballast, and also the signed depth delta from the DO sensor to the hull bottom.
+
+`hull_bottom_depth = DO reading + DO_to_hull_bottom_depth_delta`
+
+`Submarine draft = 0 ballast DO reading + DO_to_hull_bottom_depth_delta`
 
 `Trident draft = -2.64 + 7.44 = 4.8m`
+
 `Nakki draft = -1.08 + 7.35 = 6.27m`
 
-The Trident can operate in much shallower waters than the Nakki
+The Trident can operate in much shallower waters than the Nakki.
 
 ## Draft calculations for non-submarine large ships
 
-To find the draft of other large ships we position a Trident or Nakki directly under the large ship and attempt to rise as high as we can. Then measure the depth at the dive officer seat.
+To find the draft of other large ships we position a Trident or Nakki directly under the large ship and attempt to rise as high as we can. Then we measure the depth at the dive officer seat.
 
-Before we can do that, however, it's necessary to know for both submarines the DO_to_hull_top_offset.
+When the submarine is pressing upward against an anchored large ship's hull bottom, the submarine's hull top is touching the large ship's hull bottom. That means the large ship's draft is the world depth of the submarine's hull top at that moment.
+
+Before we can calculate that, it is necessary to know the signed depth delta from the DO sensor to the submarine hull top.
 
 Consider:
 
-`submarine_height = DO_to_hull_top_offset + DO_to_hull_bottom_offset`
+`DO_to_hull_top_depth_delta = DO_to_hull_bottom_depth_delta - submarine_height`
 
-The following is true regardless of where the DO sensor actually is.
-
-`DO_to_hull_top_offset = submarine_height - DO_to_hull_bottom_offset`
+This is true regardless of where the DO sensor actually is. In depth coordinates, the hull bottom is deeper than the hull top by the submarine height, so the top delta is bottom delta minus height.
 
 Plugging in known values:
 
-`Trident DO_to_hull_top_offset = 5.9 - 7.44 = -1.54m`
+`Trident DO_to_hull_top_depth_delta = 7.44 - 5.9 = 1.54m`
 
-This means the world depth of the trident's hull top is 1.54m shallower than the DO reading.
+This means the world depth of the Trident's hull top is 1.54m deeper than the DO reading.
 
-`Nakki DO_to_hull_top_offset = 7.72 - 7.35 = 0.37m`
+`Nakki DO_to_hull_top_depth_delta = 7.35 - 7.72 = -0.37m`
 
-This means the world depth of the Nakki's hull top is 0.37m deeper than the DO reading.
+This means the world depth of the Nakki's hull top is 0.37m shallower than the DO reading.
 
-**Yes, the Nakki's DO sensor is actually above where the top of the hull is.**
+**Yes, the Trident's DO sensor is actually above (higher z coordinate) the top of the Trident's hull.**
 
 For a given submarine pressing upward against an anchored large ship's hull bottom:
-`Large_ship_draft = DO reading + DO_to_hull_top_offset`
+
+`Large_ship_draft = DO reading + DO_to_hull_top_depth_delta`
 
 To test my method I calculated the draft of the BMS Longhook with both submarines.
 
 Longhook with Trident draft:
 
-`3.1 DO - (-1.54 offset) = 4.64m`
+`3.1 DO + 1.54 top delta = 4.64m`
 
 Longhook with Nakki draft:
 
-`5.08 DO - 0.37 offset = 4.71m`
+`5.08 DO + (-0.37 top delta) = 4.71m`
 
 I used the average of 4.68m for the draft of the Longhook.
 
 This produces an error of 0.07m which is within my error expectations.
 
 ## All raw draft calculation data
-We used the following formulas to calculate draft for this table:
+The following formulas are used in this table to calculate large ship drafts. The calculated draft is always the sum of the DO reading and the signed top depth delta:
 
-`DO_to_hull_top_offset = submarine_height - DO_to_hull_bottom_offset`
+`DO_to_hull_top_depth_delta = DO_to_hull_bottom_depth_delta - submarine_height`
 
-`Large_ship_draft = DO reading + DO_to_hull_top_offset`
+`Large_ship_draft = DO reading + DO_to_hull_top_depth_delta`
 
-| Draft being measured for | Sub used for measurement | Sub DO_to_hull_top_offset | Sub DO reading | Calculated draft |
+| Draft being measured for | Sub used for measurement | Sub DO-to-hull-top depth delta | Sub DO reading | Calculated draft |
 | -------- | -------- | -------- | -------- | -------- |
-| BMS Bluefin | Nakki |  0.37m | 4.18m | 3.81m | 
-| BMS Longhook | Trident |  -1.54m | 3.1m | 4.64m | 
-| BMS Longhook | Nakki |  0.37m | 5.08m | 4.71m | 
-| BMS Bowhead | Nakki |  0.37m | 5.6m | 5.23m | 
-| Colonial Conqueror | Trident |  -1.54m | 3.98m | 5.52m | 
-| Warden Callahan and Mercy | Nakki |  0.37m | 6.4m | 6.03m | 
-| Warden Frigate| Nakki |  0.37m | 7.22m | 6.85m | 
-| Colonial Titan | Trident |  -1.54m | 6.4m | 7.94m | 
-| Colonial Poseidon | Trident |  -1.54m | 6.78m | 8.32m | 
+| BMS Bluefin | Nakki | -0.37m | 4.18m | 3.81m |
+| BMS Longhook | Trident | 1.54m | 3.1m | 4.64m |
+| BMS Longhook | Nakki | -0.37m | 5.08m | 4.71m |
+| BMS Bowhead | Nakki | -0.37m | 5.6m | 5.23m |
+| Colonial Conqueror | Trident | 1.54m | 3.98m | 5.52m |
+| Warden Callahan and Mercy | Nakki | -0.37m | 6.4m | 6.03m |
+| Warden Frigate | Nakki | -0.37m | 7.22m | 6.85m |
+| Colonial Titan | Trident | 1.54m | 6.4m | 7.94m |
+| Colonial Poseidon | Trident | 1.54m | 6.78m | 8.32m |
 
 ## Assumptions and sources of error
 
