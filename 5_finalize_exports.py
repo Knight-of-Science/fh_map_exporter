@@ -1,8 +1,9 @@
 """Stitch step-4 bakes into world PNGs and assemble final composites.
 
 Writes to ``export/_final/``: ``technical/`` (ao, heightmap_simple, contour),
-``assembly/`` (base_layer, beaches, roads, fly_alert, contours, rdz, ranges,
-bridge_aim), and verbatim ``id/``, ``split_layers/``, ``svg_layers``.
+``assembly/`` (base_layer, beaches, roads, fly_alert, contours, rdz, ranges),
+optional legacy bridges_aim), and verbatim ``id/``, ``split_layers/``,
+``svg_layers``.
 
 Usage:
     python 5_finalize_exports.py
@@ -42,6 +43,7 @@ from utils.config import (
     DEPTH_COLOR_SCALING_ENABLED,
     DIVE_ALERT_COLOR,
     DISABLE_NON_WATER_ROCK_LAYERS,
+    ENABLE_LEGACY_BRIDGE_AIM,
     FINAL_DIR,
     C_TITAN_DRAFT,
     C_TRIDENT_DRAFT,
@@ -54,6 +56,7 @@ from utils.config import (
     LAYER_COLORS,
     LAYER_ENABLED,
     LAYERS_DIR,
+    LEGACY_BRIDGE_AIM_WATER_ERODE_PX,
     MEDIUM_WATER_DEPTH,
     MASK_FILE,
     PIXEL_SIZE_M,
@@ -92,9 +95,6 @@ from utils.config import (
 # Output subdirectories inside FINAL_DIR.
 TECHNICAL_DIR = "technical"
 ASSEMBLY_DIR = "assembly"
-
-# Erosion radius (pixels) applied to the water mask when gating bridge_aim.
-BRIDGE_AIM_WATER_ERODE_PX = 25
 
 # Gaussian blur applied to the contour overlay before it lands in assembly/.
 CONTOURS_BLUR_KSIZE = 3
@@ -1207,13 +1207,14 @@ def build_ranges(
     water01: np.ndarray,
     out_path: Path,
 ) -> None:
-    """svg_layers: tap*ground + intel + ai*ground + mh + cg*water, alpha-over."""
+    """svg_layers: tap*ground + intel + ai*ground + mh + cg*water + aag, alpha-over."""
     layers_gates = [
         ("ranges_tap",   ground01),
         ("ranges_intel", None),
         ("ranges_ai",    ground01),
         ("ranges_mh",    None),
         ("ranges_cg",    water01),
+        ("ranges_aag",   None),
     ]
     result = np.zeros((height, width, 4), dtype=np.uint8)
     any_hit = False
@@ -1233,19 +1234,21 @@ def build_ranges(
     LOG.saved(out_path)
 
 
-def build_bridge_aim(
+def build_legacy_bridges_aim(
     water_cov: np.ndarray | None,
     out_path: Path,
 ) -> None:
-    """svg_layers/bridges_aim gated by (water eroded by 25 px)."""
+    """Legacy svg_layers/bridges_aim gated by eroded water coverage."""
     src = _load_svg_layer("bridges_aim")
     if src is None:
-        print("  [WARN] svg_layers/bridges_aim.png missing; skipping bridge_aim")
+        print("  [WARN] svg_layers/bridges_aim.png missing; "
+              "skipping legacy bridges_aim")
         return
     if water_cov is None:
-        print("  [WARN] water coverage unavailable; skipping bridge_aim")
+        print("  [WARN] water coverage unavailable; "
+              "skipping legacy bridges_aim")
         return
-    k = 2 * BRIDGE_AIM_WATER_ERODE_PX + 1
+    k = 2 * LEGACY_BRIDGE_AIM_WATER_ERODE_PX + 1
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))
     eroded = cv2.erode(water_cov, kernel)
     gate = eroded.astype(np.float32) / 255.0
@@ -1331,7 +1334,9 @@ def main() -> int:
     if BASE_LAYER_SIMPLE_ENABLED:
         est += 1  # base_layer_simple
     if WRITE_ADDITIONAL_ASSEMBLY_LAYERS:
-        est += 3  # rdz, ranges, bridge_aim (may skip)
+        est += 2  # rdz, ranges (may skip)
+        if ENABLE_LEGACY_BRIDGE_AIM:
+            est += 1  # assembly/bridges_aim
         if WRITE_RDZ_DARK_ASSEMBLY_LAYER:
             est += 1
     LOG.set_total(est)
@@ -1652,11 +1657,11 @@ def main() -> int:
             height, width, ground01, water01,
             FINAL_DIR / ASSEMBLY_DIR / "ranges.png",
         )
+        if ENABLE_LEGACY_BRIDGE_AIM:
+            build_legacy_bridges_aim(
+                water_cov, FINAL_DIR / ASSEMBLY_DIR / "bridges_aim.png",
+            )
 
-        # -- assembly/bridge_aim.png --
-        build_bridge_aim(
-            water_cov, FINAL_DIR / ASSEMBLY_DIR / "bridge_aim.png",
-        )
     else:
         LOG.info("[skip] additional assembly layers disabled")
 
