@@ -9,3 +9,6 @@ __*
 /export/*
 !/export/_final/
 !/export/_extra/
+
+polish_and_transfer.py
+polish_and_transfer_new.py

@@ -131,6 +131,7 @@ WATER_DEPTH_COLORS: Dict[str, str] = {
 WATER_DEPTH_COLORS_SIMPLE: Dict[str, str] = {
     "SHALLOW_DEPTH":              "#C5CEE5",
     "VIC_DEPTH":                  "#A9BAE5",
+    "LARGE_SHIP_BEACH_DEPTH":     "#94A0C1",
     "C_TITAN_DRAFT":              "#94A0C1",
     "INTEL_DEPTH":                "#9390B2",
     "MEDIUM_WATER_DEPTH":         "#8F95AA",
