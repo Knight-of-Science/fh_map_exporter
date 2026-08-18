@@ -94,7 +94,7 @@ FOXHOLE_PAK = Path(
 # ------------------------------------------------------------------------------
 
 # ship drafts in meters
-SHALLOW_DEPTH = 1.0
+SHALLOW_DEPTH = 1.4
 VIC_DEPTH = 2.0
 #BMS_BLUEFIN_DRAFT = 3.81
 #BMS_LONGHOOK_DRAFT = 4.68
@@ -196,7 +196,7 @@ BASE_LAYER_SIMPLE_ENABLED = True
 
 
 WATER_DEPTH_LEGEND: List[Tuple[str, str]] = [
-    ("SHALLOW_DEPTH",             " <  1.0m | Shallows, walkable"),
+    ("SHALLOW_DEPTH",             " <  1.4m | Shallows, walkable"),
     ("VIC_DEPTH",                 " <  2.0m | Drivable depth, swimming required"),
     ("C_TRIDENT_DRAFT",           "    3.8m | BMS BLUEFIN draft (not shown)"),
     ("C_TRIDENT_DRAFT",           "    4.7m | BMS LONGHOOK draft (not shown)"),
@@ -215,7 +215,7 @@ WATER_DEPTH_LEGEND: List[Tuple[str, str]] = [
 ]
 
 WATER_DEPTH_LEGEND_SIMPLE: List[Tuple[str, str]] = [
-    ("SHALLOW_DEPTH",             " <  1.0m | Shallows, walkable"),
+    ("SHALLOW_DEPTH",             " <  1.4m | Shallows, walkable"),
     ("VIC_DEPTH",                 " <  2.0m | Drivable depth, swimming required"),
     ("LARGE_SHIP_BEACH_DEPTH",    "    3.8m | BMS BLUEFIN draft (not shown)"),
     ("LARGE_SHIP_BEACH_DEPTH",    "    4.7m | BMS LONGHOOK draft (not shown)"),
